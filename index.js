@@ -4,26 +4,29 @@ const {connectToMongoDB} = require('./connect')
 
 
 //Routers for routes
-const staticRoute = require('./routes/staticRouter');
+const staticRoute = require('./routes/staticRouter')
+const userRoute = require('./routes/user')
 
 
 const app = express()
 const PORT = 8000
 
 // Connect MongoDB
-connectToMongoDB('mongodb://localhost:27017/blogifyy').then(
+connectToMongoDB('mongodb://127.0.0.1:27017/blogify').then(
     () => console.log('MongoDB Connected')
-);
-
+)
 
 app.set('view engine', 'ejs')
 app.set('views',path.resolve('./views'))
 
 // To parse url body
 app.use(express.json())
+// To support form data
+app.use(express.urlencoded({extended:false}));
 
 // Routes
 app.use("/", staticRoute)
+app.use("/user",userRoute)
 
 
 app.get('/', (req,res)=>{

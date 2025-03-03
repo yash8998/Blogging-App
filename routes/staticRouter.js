@@ -6,10 +6,14 @@ router.get('/signin', async(req,res) => {
     return res.render('signin');
 });
 
-//Login
+//signup
 router.get('/signup', async(req,res) => {
     return res.render('signup');
 });
+
+router.get('/signin', async(req,res) => {
+    return res.render('signin');
+})
 
 
 module.exports = router;

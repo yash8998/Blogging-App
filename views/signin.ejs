@@ -3,18 +3,14 @@
 
 <head>
     <%- include('./partials/head') %>
-    <title>Signup</title>
+    <title>Signin</title>
 </head>
 
 <body>
     <%- include('./partials/nav') %>
 
     <div class = 'container mt-4'>
-        <form action="/user/signup", method="post">
-            <div class="mb-3">
-                <label for="fullName" class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="fullName" name="fullName" aria-describedby="fullName">
-              </div>
+        <form action="/user/signin", method="post">
             <div class="mb-3">
               <label for="email" class="form-label">Email address</label>
               <input type="email" class="form-control" id="email" name="email" aria-describedby="email">
