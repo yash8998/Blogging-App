@@ -1,6 +1,9 @@
 const express = require('express')
 const path = require('path')
+const cookieParser = require('cookie-parser')
+
 const {connectToMongoDB} = require('./connect')
+const {checkForAuthCookie} = require('./middlewares/authentication')
 
 
 //Routers for routes
@@ -19,10 +22,20 @@ connectToMongoDB('mongodb://127.0.0.1:27017/blogify').then(
 app.set('view engine', 'ejs')
 app.set('views',path.resolve('./views'))
 
+
+// Global Middlewares: They will be triggered before all the requests
 // To parse url body
 app.use(express.json())
-// To support form data
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({extended:false}))
+
+app.use(cookieParser())
+app.use(checkForAuthCookie('token'))
+
+app.use((req, res, next) => {
+    console.log("🛠 Global Middleware Check:", res.locals.user)
+    next()
+})
+
 
 // Routes
 app.use("/", staticRoute)

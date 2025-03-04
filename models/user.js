@@ -1,5 +1,6 @@
 const {Schema,model} = require('mongoose')
 const {createHmac,randomBytes } = require('crypto')
+const {createTokenForUser} = require('../utils/auth')
 
 const userSchema = new Schema({
     fullName:{
@@ -56,7 +57,7 @@ userSchema.pre('save',function(next){
 
 // This is a virtual function which allows us to create properties on the fields 
 // that are not stored in db
-userSchema.static('matchPassword', async function(email, password){
+userSchema.static('matchPassAndGenToken', async function(email, password){
     const user = await this.findOne({email})
     if(!user){
         throw new Error('User not found')
@@ -72,7 +73,10 @@ userSchema.static('matchPassword', async function(email, password){
     if(hashedPassword !== userProvidedHash){
         throw new Error('Incorrect Password')
     }
-    return user
+
+    // Use JWTokens instead of password and user details
+    const token = createTokenForUser(user)
+    return token
 })
 
 
