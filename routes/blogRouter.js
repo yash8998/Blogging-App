@@ -21,7 +21,9 @@ const upload = multer({ storage: storage })
 
 //add blog page
 router.get('/addBlog', async(req,res) => {
-    return res.render('addBlog');
+    return res.render('addBlog',{
+        user:req.user
+    });
 })
 
 //add blog
@@ -35,5 +37,16 @@ router.post('/', upload.single('coverImage'), async(req,res) => {
     })
     res.redirect(`/blog/${blog._id}`)
 })
+
+//view blogs
+router.get('/:id', async(req,res) => {
+    const blog = await Blog.findById(req.params.id)
+    console.log(blog)
+    return res.render('blog',{
+        user: req.user,
+        blog: blog,
+    })
+})
+
 
 module.exports = router;
