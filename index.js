@@ -4,11 +4,12 @@ const cookieParser = require('cookie-parser')
 
 const {connectToMongoDB} = require('./connect')
 const {checkForAuthCookie} = require('./middlewares/authentication')
-
+const Blog = require('./models/blog')
 
 //Routers for routes
 const staticRoute = require('./routes/staticRouter')
 const userRoute = require('./routes/user')
+const blogRoute = require('./routes/blogRouter')
 
 
 const app = express()
@@ -30,20 +31,26 @@ app.use(express.urlencoded({extended:false}))
 
 app.use(cookieParser())
 app.use(checkForAuthCookie('token'))
+app.use(express.static(path.resolve('./public')))
 
-app.use((req, res, next) => {
-    console.log("🛠 Global Middleware Check:", res.locals.user)
-    next()
-})
+// app.use((req, res, next) => {
+//     console.log("🛠 Global Middleware Check:", res.locals.user)
+//     next()
+// })
 
 
 // Routes
 app.use("/", staticRoute)
 app.use("/user",userRoute)
+app.use('/blog',blogRoute)
 
 
-app.get('/', (req,res)=>{
-    res.render('home')
+app.get('/', async (req,res)=>{
+    const allBlogs = await Blog.find({}).sort()
+    res.render('home',{
+        user: req.user,
+        blogs: allBlogs,
+    })
 })
 
 app.listen(PORT, ()=>console.log(`Server started at PORT:${PORT}`))

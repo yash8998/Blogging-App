@@ -20,7 +20,7 @@ async function handleUserSignin(req,res){
     const {email, password} = req.body
     try{
         const token = await User.matchPassAndGenToken(email,password)
-        console.log('Token',token)
+        //console.log('Token',token)
         return res.cookie('token', token).redirect("/")
     }
     catch(error){

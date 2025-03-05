@@ -3,10 +3,10 @@ const {validateToken} = require('../utils/auth')
 
 function checkForAuthCookie(cookieName){
     return (req, res, next) => {
-        console.log("Middleware Triggered");
+        //console.log("Middleware Triggered");
 
         const tokenCookieValue = req.cookies[cookieName]
-        console.log("Cookie Found:", tokenCookieValue)
+        //console.log("Cookie Found:", tokenCookieValue)
 
         if(!tokenCookieValue){
             console.log("❌ No Token in Cookies")
@@ -19,8 +19,8 @@ function checkForAuthCookie(cookieName){
             req.user = userPayload
             res.locals.user = userPayload
             
-            console.log("User extracted from token:", req.user)
-            console.log("User available in EJS templates:", res.locals.user)
+            // console.log("User extracted from token:", req.user)
+            // console.log("User available in EJS templates:", res.locals.user)
         }
         catch(error){
             console.log("❌ Invalid Token:", error.message)

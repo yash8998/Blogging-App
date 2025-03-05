@@ -11,8 +11,9 @@ router.get('/signup', async(req,res) => {
     return res.render('signup');
 });
 
-router.get('/signin', async(req,res) => {
-    return res.render('signin');
+//add blog
+router.get('/addBlog', async(req,res) => {
+    return res.render('addBlog');
 })
 
 
