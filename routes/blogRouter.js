@@ -3,7 +3,8 @@ const path = require('path')
 // For file upload
 const multer = require('multer')
 
-const Blog = require('../models/blog')
+const Blog = require('../models/blog');
+const Comment = require('../models/comment');
 const router = express.Router();
 
 // To store coverImages
@@ -40,12 +41,24 @@ router.post('/', upload.single('coverImage'), async(req,res) => {
 
 //view blogs
 router.get('/:id', async(req,res) => {
-    const blog = await Blog.findById(req.params.id)
-    console.log(blog)
+    // Gets blog by id and and adds user details by populate
+    const blog = await Blog.findById(req.params.id).populate('createdBy')
+    const comments = await Comment.find({blogId:req.params.id}).populate('createdBy')
     return res.render('blog',{
         user: req.user,
-        blog: blog,
+        blog,
+        comments
     })
+})
+
+router.post('/comment/:blogId',async(req, res)=>{
+    const comment = await Comment.create({
+        content: req.body.content,
+        blogId: req.params.blogId,
+        createdBy: req.user._id
+    })
+
+    return res.redirect(`/blog/${req.params.blogId}`)
 })
 
 
